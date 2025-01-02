@@ -9,7 +9,7 @@ $yamlPath = ".\consolidated-variables.yml"
 
 # Load the YAML file
 $yamlContent = Get-Content -Raw -Path $yamlPath
-$librarySets = ConvertFrom-Yaml -YamlText $yamlContent
+$librarySets = ConvertFrom-Yaml $yamlContent
 
 # Fetch the consolidated variables
 $variables = $librarySets.library_sets
