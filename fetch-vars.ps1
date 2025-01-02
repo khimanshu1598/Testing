@@ -1,5 +1,8 @@
-# Load YAML module
-Import-Module 'PSYaml'
+# Ensure PSYaml is installed and imported
+if (-not (Get-Module -ListAvailable -Name PSYaml)) {
+    Install-Module -Name PSYaml -Force -Scope CurrentUser
+}
+Import-Module PSYaml
 
 # Path to the consolidated YAML file
 $yamlPath = ".\consolidated-variables.yml"
