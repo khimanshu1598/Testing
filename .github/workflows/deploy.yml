@@ -24,19 +24,19 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name PSYaml -Force -Scope CurrentUser
-          Import-Module 'PSYaml'
+          Import-Module -Name PSYaml
 
       - name: Consolidate Environment Variables
         id: consolidate_vars
         shell: pwsh
         run: |
-          Install-Module -Name PSYaml -Force -Scope CurrentUser
-          Import-Module 'PSYaml'
-          
           $environment = "${{ github.event.inputs.environment }}"
-          $yamlPath = ".github/config/library-variables.yml"
-          $outputPath = ".github/config/consolidated-variables.yml"
-
+          $yamlPath = "./library-variables.yml"
+          $outputPath = "./consolidated-variables.yml"
+          
+          Install-Module -Name PSYaml -Force -Scope CurrentUser
+          Import-Module -Name PSYaml
+          
           $yamlContent = Get-Content -Raw -Path $yamlPath
           $librarySets = $yamlContent | ConvertFrom-Yaml
 
@@ -62,5 +62,5 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name PSYaml -Force -Scope CurrentUser
-          Import-Module 'PSYaml'
+          Import-Module -Name PSYaml
           ./fetch-vars.ps1
