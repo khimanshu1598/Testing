@@ -37,7 +37,7 @@ jobs:
           Import-Module powershell-yaml
           
           $yamlContent = Get-Content -Raw -Path $yamlPath
-          $librarySets = ConvertFrom-Yaml $yamlContent
+          $librarySets = $yamlContent | ConvertFrom-Yaml
 
           $consolidated = @{}
 
