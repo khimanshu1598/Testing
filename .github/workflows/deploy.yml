@@ -20,10 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install PSYaml Module
+      - name: Install YamlDotNet Module
         shell: pwsh
         run: |
-          Install-Module -Name PSYaml -Force -Scope CurrentUser
+          Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+          Install-Module -Name YamlDotNet -Force -Scope CurrentUser
 
       - name: Consolidate Environment Variables
         id: consolidate_vars
@@ -32,12 +33,13 @@ jobs:
           $environment = "${{ github.event.inputs.environment }}"
           $yamlPath = "library-variables.yml"
           $outputPath = "consolidated-variables.yml"
-
-          # Ensure the PSYaml module is imported
-          Import-Module PSYaml
-
+          
+          Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+          Install-Module -Name YamlDotNet -Force -Scope CurrentUser
+          Import-Module YamlDotNet
+          
           $yamlContent = Get-Content -Raw -Path $yamlPath
-          $librarySets = $yamlContent | ConvertFrom-Yaml
+          $librarySets = [YamlDotNet.Serialization.Deserializer]::new().Deserialize([string[]]$yamlContent)
 
           $consolidated = @{}
 
@@ -60,6 +62,7 @@ jobs:
       - name: Execute PowerShell Script
         shell: pwsh
         run: |
-          # Ensure the PSYaml module is imported
-          Import-Module PSYaml
+          Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+          Install-Module -Name YamlDotNet -Force -Scope CurrentUser
+          Import-Module YamlDotNet
           ./fetch-vars.ps1
