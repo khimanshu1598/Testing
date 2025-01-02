@@ -15,14 +15,16 @@ $librarySets = $yamlContent | ConvertFrom-Yaml
 Write-Output "Loaded YAML Content:"
 Write-Output $librarySets
 
-# Initialize the $variables object correctly
-$variables = $librarySets.library_sets
+# Correctly access the nested dictionary within $librarySets
+if ($null -ne $librarySets -and $librarySets.ContainsKey("library_sets")) {
+    $variables = $librarySets["library_sets"]
+} else {
+    Write-Output "library_sets key not found. Exiting."
+    exit 1
+}
 
-# Debugging: Print the $librarySets and $variables
-Write-Output "Library Sets:"
-Write-Output $librarySets
-
-Write-Output "Variables:"
+# Debugging: Print the fetched variables
+Write-Output "Fetched Variables:"
 Write-Output $variables
 
 # Ensure the variables are not null before accessing them
@@ -43,7 +45,6 @@ if ($variables.ContainsKey("DefaultVar")) {
 } else {
     Write-Output "DefaultVar not found in variables"
     exit 1
-}
 
 # Display the message
 Write-Output "Hi $variableName, This workflow is running for $environment and is having default value as $defaultValue"
