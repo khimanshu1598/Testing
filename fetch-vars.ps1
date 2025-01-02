@@ -15,14 +15,22 @@ $librarySets = $yamlContent | ConvertFrom-Yaml
 Write-Output "Loaded YAML Content:"
 Write-Output $librarySets
 
-# Fetch the consolidated variables
+# Initialize the $variables object correctly
 $variables = $librarySets.library_sets
 
-# Debugging: Print the fetched variables
-Write-Output "Fetched Variables:"
+# Debugging: Print the $librarySets and $variables
+Write-Output "Library Sets:"
+Write-Output $librarySets
+
+Write-Output "Variables:"
 Write-Output $variables
 
 # Ensure the variables are not null before accessing them
+if ($null -eq $variables) {
+    Write-Output "Variables object is null. Exiting."
+    exit 1
+}
+
 if ($variables.ContainsKey("CellName")) {
     $variableName = $variables["CellName"].value
 } else {
