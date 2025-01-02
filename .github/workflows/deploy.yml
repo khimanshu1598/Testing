@@ -16,7 +16,7 @@ jobs:
   deploy:
     runs-on: windows-latest
     environment: ${{ github.event.inputs.environment }}
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -24,19 +24,18 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name PSYaml -Force -Scope CurrentUser
-          Import-Module -Name PSYaml
 
       - name: Consolidate Environment Variables
         id: consolidate_vars
         shell: pwsh
         run: |
           $environment = "${{ github.event.inputs.environment }}"
-          $yamlPath = "./library-variables.yml"
-          $outputPath = "./consolidated-variables.yml"
-          
-          Install-Module -Name PSYaml -Force -Scope CurrentUser
-          Import-Module -Name PSYaml
-          
+          $yamlPath = "library-variables.yml"
+          $outputPath = "consolidated-variables.yml"
+
+          # Ensure the PSYaml module is imported
+          Import-Module PSYaml
+
           $yamlContent = Get-Content -Raw -Path $yamlPath
           $librarySets = $yamlContent | ConvertFrom-Yaml
 
@@ -61,6 +60,6 @@ jobs:
       - name: Execute PowerShell Script
         shell: pwsh
         run: |
-          Install-Module -Name PSYaml -Force -Scope CurrentUser
-          Import-Module -Name PSYaml
+          # Ensure the PSYaml module is imported
+          Import-Module PSYaml
           ./fetch-vars.ps1
