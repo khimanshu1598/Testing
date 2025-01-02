@@ -45,6 +45,7 @@ if ($variables.ContainsKey("DefaultVar")) {
 } else {
     Write-Output "DefaultVar not found in variables"
     exit 1
+}
 
 # Display the message
 Write-Output "Hi $variableName, This workflow is running for $environment and is having default value as $defaultValue"
