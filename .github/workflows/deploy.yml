@@ -1,0 +1,56 @@
+name: Deploy Environment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target Environment'
+        required: true
+        type: choice
+        options:
+          - "LS6 Global - 00"
+          - "LS6 Global - 01"
+          - "Production Global - 00"
+          - "Production Global - 01"
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Consolidate Environment Variables
+        id: consolidate_vars
+        shell: pwsh
+        run: |
+          $environment = "${{ github.event.inputs.environment }}"
+          $yamlPath = ".github/config/library-variables.yml"
+          $outputPath = ".github/config/consolidated-variables.yml"
+
+          Import-Module 'PSYaml'
+
+          $yamlContent = Get-Content -Raw -Path $yamlPath
+          $librarySets = $yamlContent | ConvertFrom-Yaml
+
+          $consolidated = @{}
+
+          foreach ($set in $librarySets.library_sets.GetEnumerator()) {
+            $varName = $set.Key
+            # Include environment-specific variables
+            foreach ($env in $set.Value.environments.GetEnumerator()) {
+              if ($env.Key -eq $environment) {
+                $consolidated[$varName] = @{ value = $env.Value.value }
+              }
+            }
+            # Include default variable if available
+            if ($set.Value -is [System.Collections.Hashtable] -and $set.Value.ContainsKey("value")) {
+              $consolidated[$varName] = @{ value = $set.Value.value }
+            }
+          }
+
+          $consolidated | ConvertTo-Yaml | Set-Content -Path $outputPath
+
+      - name: Execute PowerShell Script
+        shell: pwsh
+        run: ./fetch-vars.ps1
