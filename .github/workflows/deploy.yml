@@ -43,10 +43,13 @@ jobs:
 
           foreach ($set in $librarySets.library_sets.GetEnumerator()) {
             $varName = $set.Key
-            # Include environment-specific variables
-            foreach ($env in $set.Value.environments.GetEnumerator()) {
-              if ($env.Key -eq $environment) {
-                $consolidated[$varName] = @{ value = $env.Value.value }
+            # Check if the environments property exists and is not null
+            if ($set.Value.environments -ne $null) {
+              # Include environment-specific variables
+              foreach ($env in $set.Value.environments.GetEnumerator()) {
+                if ($env.Key -eq $environment) {
+                  $consolidated[$varName] = @{ value = $env.Value.value }
+                }
               }
             }
             # Include default variable if available
