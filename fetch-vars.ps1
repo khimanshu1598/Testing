@@ -1,3 +1,7 @@
+param (
+    [string]$environment
+)
+
 # Ensure PowerShell-YAML is installed and imported
 if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
     Install-Module -Name powershell-yaml -Force -Scope CurrentUser
