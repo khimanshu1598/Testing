@@ -2,13 +2,13 @@ library_sets:
   CellName:
     environments:
       "LS6 Global - 00":
-        value: "global-00"
+        value: "Himanshu"
       "Production Global - 00":
-        value: "global-00"
+        value: "Mani"
       "LS6 Global - 01":
-        value: "global-01"
+        value: "Mradul"
       "Production Global - 01":
-        value: "global-01"
+        value: "Brinda"
   AnotherVar:
     environments:
       "LS6 Global - 00":
@@ -20,4 +20,4 @@ library_sets:
       "Production Global - 01":
         value: "another-value-01"
   DefaultVar:
-    value: "default-value"
+    value: "Happy"
