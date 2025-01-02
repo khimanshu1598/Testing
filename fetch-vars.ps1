@@ -1,14 +1,15 @@
-# Ensure YamlDotNet is installed
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Install-Module -Name YamlDotNet -Force -Scope CurrentUser
-Import-Module YamlDotNet
+# Ensure PowerShell-YAML is installed and imported
+if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
+    Install-Module -Name powershell-yaml -Force -Scope CurrentUser
+}
+Import-Module powershell-yaml
 
 # Path to the consolidated YAML file
 $yamlPath = ".\consolidated-variables.yml"
 
 # Load the YAML file
 $yamlContent = Get-Content -Raw -Path $yamlPath
-$librarySets = [YamlDotNet.Serialization.Deserializer]::new().Deserialize([string[]]$yamlContent)
+$librarySets = ConvertFrom-Yaml -YamlText $yamlContent
 
 # Fetch the consolidated variables
 $variables = $librarySets.library_sets
