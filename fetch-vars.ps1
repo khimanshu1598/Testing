@@ -15,13 +15,8 @@ $librarySets = $yamlContent | ConvertFrom-Yaml
 Write-Output "Loaded YAML Content:"
 Write-Output $librarySets
 
-# Correctly access the nested dictionary within $librarySets
-if ($null -ne $librarySets -and $librarySets.ContainsKey("library_sets")) {
-    $variables = $librarySets["library_sets"]
-} else {
-    Write-Output "library_sets key not found. Exiting."
-    exit 1
-}
+# Directly access the variables dictionary
+$variables = $librarySets
 
 # Debugging: Print the fetched variables
 Write-Output "Fetched Variables:"
