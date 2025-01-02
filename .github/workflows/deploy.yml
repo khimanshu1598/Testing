@@ -20,11 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install YamlDotNet Module
+      - name: Install PowerShell-YAML Module
         shell: pwsh
         run: |
-          Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-          Install-Module -Name YamlDotNet -Force -Scope CurrentUser
+          Install-Module -Name powershell-yaml -Force -Scope CurrentUser
 
       - name: Consolidate Environment Variables
         id: consolidate_vars
@@ -34,12 +33,11 @@ jobs:
           $yamlPath = "library-variables.yml"
           $outputPath = "consolidated-variables.yml"
           
-          Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-          Install-Module -Name YamlDotNet -Force -Scope CurrentUser
-          Import-Module YamlDotNet
+          Install-Module -Name powershell-yaml -Force -Scope CurrentUser
+          Import-Module powershell-yaml
           
           $yamlContent = Get-Content -Raw -Path $yamlPath
-          $librarySets = [YamlDotNet.Serialization.Deserializer]::new().Deserialize([string[]]$yamlContent)
+          $librarySets = ConvertFrom-Yaml -YamlText $yamlContent
 
           $consolidated = @{}
 
@@ -62,7 +60,6 @@ jobs:
       - name: Execute PowerShell Script
         shell: pwsh
         run: |
-          Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-          Install-Module -Name YamlDotNet -Force -Scope CurrentUser
-          Import-Module YamlDotNet
+          Install-Module -Name powershell-yaml -Force -Scope CurrentUser
+          Import-Module powershell-yaml
           ./fetch-vars.ps1
