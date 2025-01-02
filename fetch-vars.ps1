@@ -9,14 +9,33 @@ $yamlPath = ".\consolidated-variables.yml"
 
 # Load the YAML file
 $yamlContent = Get-Content -Raw -Path $yamlPath
-$librarySets = ConvertFrom-Yaml $yamlContent
+$librarySets = $yamlContent | ConvertFrom-Yaml
+
+# Print the content of the loaded YAML for debugging
+Write-Output "Loaded YAML Content:"
+Write-Output $librarySets
 
 # Fetch the consolidated variables
 $variables = $librarySets.library_sets
 
-# Assign variables
-$variableName = $variables["CellName"].value
-$defaultValue = $variables["DefaultVar"].value
+# Debugging: Print the fetched variables
+Write-Output "Fetched Variables:"
+Write-Output $variables
+
+# Ensure the variables are not null before accessing them
+if ($variables.ContainsKey("CellName")) {
+    $variableName = $variables["CellName"].value
+} else {
+    Write-Output "CellName not found in variables"
+    exit 1
+}
+
+if ($variables.ContainsKey("DefaultVar")) {
+    $defaultValue = $variables["DefaultVar"].value
+} else {
+    Write-Output "DefaultVar not found in variables"
+    exit 1
+}
 
 # Display the message
 Write-Output "Hi $variableName, This workflow is running for $environment and is having default value as $defaultValue"
